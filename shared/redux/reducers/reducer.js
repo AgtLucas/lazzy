@@ -1,6 +1,6 @@
-import * as ActionTypes from '../constants/constants';
+import * as ActionTypes from '../constants/constants'
 
-const initialState = { posts: [], selectedPost: null };
+const initialState = { posts: [], selectedPost: null }
 
 const postReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -12,36 +12,36 @@ const postReducer = (state = initialState, action) => {
           content: action.content,
           slug: action.slug,
           cuid: action.cuid,
-          _id: action._id,
+          _id: action._id
         }].concat(state.posts),
-        post: state.post };
+        post: state.post }
 
     case ActionTypes.CHANGE_SELECTED_POST :
       return {
         posts: state.posts,
-        post: action.slug,
-      };
+        post: action.slug
+      }
 
     case ActionTypes.ADD_POSTS :
       return {
         posts: action.posts,
-        post: state.post,
-      };
+        post: state.post
+      }
 
     case ActionTypes.ADD_SELECTED_POST :
       return {
         post: action.post,
-        posts: state.posts,
-      };
+        posts: state.posts
+      }
 
     case ActionTypes.DELETE_POST :
       return {
-        posts: state.posts.filter((post) => post._id !== action.post._id),
-      };
+        posts: state.posts.filter((post) => post._id !== action.post._id)
+      }
 
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default postReducer;
+export default postReducer
