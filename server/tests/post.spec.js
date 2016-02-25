@@ -1,33 +1,33 @@
 /* eslint-disable */
 
-import mocha from 'mocha';
-import app from '../server';
-import chai from 'chai';
-import request from 'supertest';
-import mongoose from 'mongoose';
-import Post from '../models/post';
+import mocha from 'mocha'
+import app from '../server'
+import chai from 'chai'
+import request from 'supertest'
+import mongoose from 'mongoose'
+import Post from '../models/post'
 
-const expect = chai.expect;
+const expect = chai.expect
 
 function connectDB(done) {
   if (mongoose.connection.name !== 'mern-test') {
-    return done();
+    return done()
   }
 
   mongoose.connect((process.env.MONGO_URL || 'mongodb://localhost:27017/mern-test'), function (err) {
-    if (err) return done(err);
-    done();
-  });
+    if (err) return done(err)
+    done()
+  })
 }
 
 function dropDB(done) {
   if (mongoose.connection.name !== 'mern-test') {
-    return done();
+    return done()
   }
 
   mongoose.connection.db.dropDatabase(function (err) {
-    mongoose.connection.close(done);
-  });
+    mongoose.connection.close(done)
+  })
 }
 
 describe('GET /api/getPosts', function () {
@@ -35,18 +35,18 @@ describe('GET /api/getPosts', function () {
   beforeEach('connect and add two post entries', function (done) {
 
     connectDB(function () {
-      var post1 = new Post({name: 'Prashant', title: 'Hello Mern', content: "All cats meow 'mern!'"});
-      var post2 = new Post({name: 'Mayank', title: 'Hi Mern', content: "All dogs bark 'mern!'"});
+      var post1 = new Post({name: 'Prashant', title: 'Hello Mern', content: "All cats meow 'mern!'"})
+      var post2 = new Post({name: 'Mayank', title: 'Hi Mern', content: "All dogs bark 'mern!'"})
 
       Post.create([post1, post2], function (err, saved) {
-        done();
-      });
-    });
-  });
+        done()
+      })
+    })
+  })
 
   afterEach(function (done) {
-    dropDB(done);
-  });
+    dropDB(done)
+  })
 
   it('Should correctly give number of Posts', function (done) {
 
@@ -55,29 +55,29 @@ describe('GET /api/getPosts', function () {
       .set('Accept', 'application/json')
       .end(function (err, res) {
         Post.find().exec(function (err, posts) {
-          expect(posts.length).to.equal(res.body.posts.length);
-          done();
-        });
-      });
-  });
-});
+          expect(posts.length).to.equal(res.body.posts.length)
+          done()
+        })
+      })
+  })
+})
 
 describe('GET /api/getPost', function () {
 
   beforeEach('connect and add one Post entry', function(done){
 
     connectDB(function () {
-      var post = new Post({ name: 'Foo', title: 'bar', slug: 'bar', cuid: 'f34gb2bh24b24b2', content: 'Hello Mern says Foo' });
+      var post = new Post({ name: 'Foo', title: 'bar', slug: 'bar', cuid: 'f34gb2bh24b24b2', content: 'Hello Mern says Foo' })
 
       post.save(function (err, saved) {
-        done();
-      });
-    });
-  });
+        done()
+      })
+    })
+  })
 
   afterEach(function (done) {
-    dropDB(done);
-  });
+    dropDB(done)
+  })
 
   it('Should send correct data when queried against a title', function (done) {
 
@@ -86,26 +86,26 @@ describe('GET /api/getPost', function () {
       .set('Accept', 'application/json')
       .end(function (err, res) {
         Post.findOne({ cuid: 'f34gb2bh24b24b2' }).exec(function (err, post) {
-          expect(post.name).to.equal('Foo');
-          done();
-        });
-      });
-  });
+          expect(post.name).to.equal('Foo')
+          done()
+        })
+      })
+  })
 
-});
+})
 
 describe('POST /api/addPost', function () {
 
   beforeEach('connect and add a post', function (done) {
 
     connectDB(function () {
-      done();
-    });
-  });
+      done()
+    })
+  })
 
   afterEach(function (done) {
-    dropDB(done);
-  });
+    dropDB(done)
+  })
 
   it('Should send correctly add a post', function (done) {
 
@@ -115,39 +115,39 @@ describe('POST /api/addPost', function () {
       .set('Accept', 'application/json')
       .end(function (err, res) {
         Post.findOne({ title: 'bar' }).exec(function (err, post) {
-          expect(post.name).to.equal('Foo');
-          done();
-        });
-      });
-  });
+          expect(post.name).to.equal('Foo')
+          done()
+        })
+      })
+  })
 
-});
+})
 
 describe('POST /api/deletePost', function () {
-  var postId;
+  var postId
 
   beforeEach('connect and add one Post entry', function(done){
 
     connectDB(function () {
-      var post = new Post({ name: 'Foo', title: 'bar', slug: 'bar', cuid: 'f34gb2bh24b24b2', content: 'Hello Mern says Foo' });
+      var post = new Post({ name: 'Foo', title: 'bar', slug: 'bar', cuid: 'f34gb2bh24b24b2', content: 'Hello Mern says Foo' })
 
       post.save(function (err, saved) {
-        postId = saved._id;
-        done();
-      });
-    });
-  });
+        postId = saved._id
+        done()
+      })
+    })
+  })
 
   afterEach(function (done) {
-    dropDB(done);
-  });
+    dropDB(done)
+  })
 
   it('Should connect and delete a post', function () {
 
     // Check if post is saved in DB
     Post.findById(postId).exec(function (err, post) {
       expect(post.name).to.equal('Foo')
-    });
+    })
 
     request(app)
       .post('/api/deletePost')
@@ -157,9 +157,9 @@ describe('POST /api/deletePost', function () {
 
         // Check if post is removed from DB
         Post.findById(postId).exec(function (err, post) {
-          expect(post).to.equal(null);
-          done();
-        });
-      });
+          expect(post).to.equal(null)
+          done()
+        })
+      })
   })
-});
+})
