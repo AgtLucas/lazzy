@@ -1,10 +1,10 @@
 /* eslint no-unused-vars: 0 */
-import * as ActionTypes from '../constants/constants';
-import fetch from 'isomorphic-fetch';
+import * as ActionTypes from '../constants/constants'
+import fetch from 'isomorphic-fetch'
 
-const baseURL = typeof window === 'undefined' ? process.env.BASE_URL || (`http://localhost:${(process.env.PORT || 8000)}`) : '';
+const baseURL = typeof window === 'undefined' ? process.env.BASE_URL || (`http://localhost:${(process.env.PORT || 8000)}`) : ''
 
-export function addPost(post) {
+export function addPost (post) {
   return {
     type: ActionTypes.ADD_POST,
     name: post.name,
@@ -12,18 +12,18 @@ export function addPost(post) {
     content: post.content,
     slug: post.slug,
     cuid: post.cuid,
-    _id: post._id,
-  };
+    _id: post._id
+  }
 }
 
-export function changeSelectedPost(slug) {
+export function changeSelectedPost (slug) {
   return {
     type: ActionTypes.CHANGE_SELECTED_POST,
-    slug,
-  };
+    slug
+  }
 }
 
-export function addPostRequest(post) {
+export function addPostRequest (post) {
   return (dispatch) => {
     fetch(`${baseURL}/api/addPost`, {
       method: 'post',
@@ -31,66 +31,66 @@ export function addPostRequest(post) {
         post: {
           name: post.name,
           title: post.title,
-          content: post.content,
-        },
+          content: post.content
+        }
       }),
       headers: new Headers({
-        'Content-Type': 'application/json',
-      }),
-    }).then((res) => res.json()).then(res => dispatch(addPost(res.post)));
-  };
+        'Content-Type': 'application/json'
+      })
+    }).then((res) => res.json()).then(res => dispatch(addPost(res.post)))
+  }
 }
 
-export function addSelectedPost(post) {
+export function addSelectedPost (post) {
   return {
     type: ActionTypes.ADD_SELECTED_POST,
-    post,
-  };
+    post
+  }
 }
 
-export function getPostRequest(post) {
+export function getPostRequest (post) {
   return (dispatch) => {
     return fetch(`${baseURL}/api/getPost?slug=${post}`, {
       method: 'get',
       headers: new Headers({
-        'Content-Type': 'application/json',
-      }),
-    }).then((response) => response.json()).then(res => dispatch(addSelectedPost(res.post)));
-  };
+        'Content-Type': 'application/json'
+      })
+    }).then((response) => response.json()).then(res => dispatch(addSelectedPost(res.post)))
+  }
 }
 
-export function deletePost(post) {
+export function deletePost (post) {
   return {
     type: ActionTypes.DELETE_POST,
-    post,
-  };
+    post
+  }
 }
 
-export function addPosts(posts) {
+export function addPosts (posts) {
   return {
     type: ActionTypes.ADD_POSTS,
-    posts,
-  };
+    posts
+  }
 }
 
-export function fetchPosts() {
+export function fetchPosts () {
   return (dispatch) => {
-    return fetch(`${baseURL}/api/getPosts`).
-      then((response) => response.json()).
-      then((response) => dispatch(addPosts(response.posts)));
-  };
+    return fetch(`${baseURL}/api/getPosts`)
+      .then((response) => response.json())
+      .then((response) => dispatch(addPosts(response.posts)))
+  }
 }
 
-export function deletePostRequest(post) {
+export function deletePostRequest (post) {
   return (dispatch) => {
     fetch(`${baseURL}/api/deletePost`, {
       method: 'post',
       body: JSON.stringify({
-        postId: post._id,
+        postId: post._id
       }),
       headers: new Headers({
-        'Content-Type': 'application/json',
-      }),
-    }).then(() => dispatch(deletePost(post)));
-  };
+        'Content-Type': 'application/json'
+      })
+    }).then(() => dispatch(deletePost(post)))
+  }
 }
